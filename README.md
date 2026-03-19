@@ -26,10 +26,45 @@ To implement MESSAGE AUTHENTICATION CODE(MAC)
 
 ## Program:
 
+```python
+MAC_SIZE = 32
 
+def compute_mac(key, message):
+    mac = []
+    key_len = len(key)
+    msg_len = len(message)
+
+    for i in range(MAC_SIZE):
+        xor_byte = ord(key[i % key_len]) ^ ord(message[i % msg_len])
+        mac.append(xor_byte)
+    return mac  
+
+def mac_to_hex(mac):
+    return ''.join(format(b, '02x') for b in mac)
+
+def hex_to_mac(hex_string):
+    mac = []
+    for i in range(0, MAC_SIZE * 2, 2):
+        mac.append(int(hex_string[i:i+2], 16))
+    return mac
+
+key = input("Enter the secret key: ")
+message = input("Enter the message: ")
+mac = compute_mac(key, message)
+print("Computed MAC (in hex):")
+print(" ", mac_to_hex(mac))
+received_mac_hex = input("Enter the received MAC (as hex): ")
+received_mac = hex_to_mac(received_mac_hex)
+
+if mac == received_mac:
+    print("MAC verification successful. Message is authentic.")
+else:
+    print("MAC verification failed. Message is not authentic.")
+```
 
 ## Output:
 
+<img width="807" height="272" alt="image" src="https://github.com/user-attachments/assets/becabb9a-1134-4c49-bea5-185933c89c27" />
 
 ## Result:
 The program is executed successfully.
